@@ -1,0 +1,3 @@
+[submodule "pygraphvis"]
+	path = pygraphvis
+	url = git@github.com:khoek/pygraphvis.git
