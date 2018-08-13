@@ -223,16 +223,15 @@ if __name__ == "__main__":
         event_handler = event_handler)
 
     server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    os.remove("../../Dropbox/code/tidy/rewrite_search.socket")
-    server.bind("../../Dropbox/code/tidy/rewrite_search.socket")
+    try:
+    	os.remove("../lean-tidy/rewrite_search.socket")
+    except OSError:
+    	pass
+    server.bind("../lean-tidy/rewrite_search.socket")
     server.listen(1)
 
     listener = Thread(target = listen_loop, args = (server, ))
     listener.daemon = True
     listener.start()
 
-    try:
-        v.start()
-        v.thread.join()
-    finally:
-        v.stop()
+    v.render_loop()
