@@ -206,8 +206,7 @@ def listen_loop(server):
         buff = ""
         conn_open = True
         while conn_open:
-            buff += conn.recv(1024).decode("ASCII")
-            # print("B" + str(buff))
+            buff += conn.recv(1024).decode("utf-8")
             split = buff.split("\n")
             buff = split[-1]
             for line in split[:-1]:
@@ -222,17 +221,21 @@ if __name__ == "__main__":
     v = vis.Visualiser(graphs.DynamicGraph(), size = (1200, 1000),
         event_handler = event_handler)
 
+    #FIXME open a dialog to select this:
+    path_to_project = "../../Dropbox/code/tidy"
+    socket_path = path_to_project + "/rewrite_search.socket"
+
+    try:
+        os.remove(socket_path)
+    except OSError:
+        pass
+
     server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    os.remove("../../Dropbox/code/tidy/rewrite_search.socket")
-    server.bind("../../Dropbox/code/tidy/rewrite_search.socket")
+    server.bind(socket_path)
     server.listen(1)
 
     listener = Thread(target = listen_loop, args = (server, ))
     listener.daemon = True
     listener.start()
 
-    try:
-        v.start()
-        v.thread.join()
-    finally:
-        v.stop()
+    v.render_loop()
