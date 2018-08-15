@@ -146,7 +146,7 @@ def process_line(line):
 
         v.lock.acquire()
         if id in ["0", "1"]:
-            colour = (255, 0, 0) if side == "L" else (0, 255, 0)
+            colour = (140, 101, 211) if side == "L" else (0, 197, 144)
             pos = (-20, 0) if side == "L" else (20, 0)
 
             vert = create_new_node((0, 0), name, False)
@@ -156,7 +156,7 @@ def process_line(line):
         else:
             root = verts["0"] if side == "L" else verts["1"]
             vert = create_new_node(root.pos, name, False)
-            vert.style.value.colour = root.style.value.colour
+            vert.style.value.colour = (202, 185, 241) if side == "L" else (181, 249, 211)
         v.lock.release()
 
         verts[id] = vert
@@ -206,7 +206,7 @@ def listen_loop(server):
         buff = ""
         conn_open = True
         while conn_open:
-            buff += conn.recv(1024).decode("utf-8")
+            buff += conn.recv(1024).decode("latin-1")
             split = buff.split("\n")
             buff = split[-1]
             for line in split[:-1]:
@@ -222,7 +222,7 @@ if __name__ == "__main__":
         event_handler = event_handler)
 
     #FIXME open a dialog to select this:
-    path_to_project = "../../Dropbox/code/tidy"
+    path_to_project = "../lean-category-theory/"
     socket_path = path_to_project + "/rewrite_search.socket"
 
     try:
